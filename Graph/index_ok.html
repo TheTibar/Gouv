@@ -1,0 +1,30 @@
+<head>
+  <style> body { margin: 0; } </style>
+
+  <script src="//unpkg.com/3d-force-graph"></script>
+  <!--<script src="../../dist/3d-force-graph.js"></script>-->
+</head>
+
+<body>
+
+  <div id="3d-graph"></div>
+
+  <script>
+    const elem = document.getElementById('3d-graph');
+	
+	const highlightNodes = new Set();
+    const highlightLinks = new Set();
+	let hoverNode = null;
+
+    const Graph = ForceGraph3D()(elem)
+      //.jsonUrl('../datasets/blocks.json') //ancienne valeur
+	  .jsonUrl('data/data_node_links97.json')
+      .nodeAutoColorBy('user') //ancienne valeur
+      .linkDirectionalParticles(link => highlightLinks.has(link) ? 4 : 0) //ajout
+      .linkDirectionalParticleWidth(4) //ajout
+      .nodeLabel(node => `${node.user}: ${node.description}`)
+	  .onNodeHover(node => elem.style.cursor = node ? 'pointer' : null) //ancienne valeur
+      .onNodeClick(node => window.open(node.description, '_blank'));
+
+  </script>
+</body>
