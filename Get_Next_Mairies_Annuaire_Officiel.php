@@ -1,6 +1,4 @@
 <?php
-//error_reporting(E_ALL);
-/**/
 
 require_once __DIR__ . '/Classes/mairie.php';
 require_once __DIR__ . '/Classes/process.php';
@@ -37,35 +35,20 @@ $maxPage = $Suivi->__get("last_page");
 //Dans cette page, on initialise la récupération des données. Comme cela prend plus d'une heure, il faut relancer le même type de process plus tard pour compléter
 //c'est la page Get_Next_Mairies_Annuaire_Officiel.php qui s'en occupe, et que l'on peut appeler plusieurs fois sans risque d'écraser des données.
 
-
-/**/
 for($i = $currentPage; $i <= $maxPage; $i++) { //pour les tests, on peut remplacer $maxPage par une petite valeur
 	echo(nl2br("Page " . $i ." sur " . $maxPage . " : "));
 	$urlRoot = "https://lannuaire.service-public.fr/navigation/mairie?page=" . $i;
 	
 	$result = getComLinks($urlRoot, $current_process);
 	$Suivi->setCurrentPage($i);
-	//echo(buildTable($result));
 }
 
-
-
-//$resultCom = getComLinks($resultDep, $current_process);
-//echo(nl2br("resultCom : " . count($resultCom) . "\n"));
-//echo(buildTable($resultCom));
-//echo(nl2br("\n"));
-
-/**/
 function getComLinks($urlRoot, $current_process)
 {
-	//echo(nl2br("Entree dans getComLinks \n"));
 	$Mairie = new Mairie();
 	$links = [];
 
 	echo(nl2br("(" . date('Y-m-d H:i:s') . ") " . "currentURL : " . $urlRoot . "\n"));
-
-	
-	//echo(nl2br("(" . date('Y-m-d H:i:s') . ") " . "curl_get_content \n"));
 	$content = curl_get_contents($urlRoot); //3 secondes environ par page...
 	$dom = new DOMDocument;
 	libxml_use_internal_errors(true);
@@ -73,70 +56,21 @@ function getComLinks($urlRoot, $current_process)
 	$dom->loadHTML($content);
 	
 	$xPath = new DOMXPath($dom);
-	//echo(nl2br("(" . date('Y-m-d H:i:s') . ") " . "evaluate \n"));
 	$anchorTags = $xPath->evaluate('//ul[@class="list-arrow list-orga"]//a/@href'); //Ok
-	
-	//var_dump($anchorTags);
-	//echo(nl2br("(" . date('Y-m-d H:i:s') . ") " . "foreEach \n"));
 	foreach ($anchorTags as $anchorTag) {
-		//echo(nl2br("(" . date('Y-m-d H:i:s') . ") " . "comURL \n"));
 		$comURL = $anchorTag->nodeValue;
-		//echo(nl2br("URL : " . $comURL . "\n"));
 		$comURLSplit = explode("/", $comURL);
-		//echo(nl2br("comURLSplit : \n"));
-		//var_dump($comURLSplit);
-		//echo(nl2br("(" . date('Y-m-d H:i:s') . ") " . "Region \n"));
 		$region = $comURLSplit[3];
-		//echo(nl2br("Région : " . $region . "\n"));
-		//echo(nl2br("(" . date('Y-m-d H:i:s') . ") " . "Departement \n"));
 		$departement = $comURLSplit[4];
-		//echo(nl2br("Département : " . $departement . "\n"));
 		$mairie = $comURLSplit[5];
-		//echo(nl2br("Mairie : " . $mairie . "\n"));
 		$mairieSplit = explode("-", $mairie);
-		//echo(nl2br("(" . date('Y-m-d H:i:s') . ") " . "Insee \n"));
 		$insee_code = $mairieSplit[1];
-		$links[] = array("insee"=>$insee_code, "comURL"=>$comURL, "region"=>$region, "departement"=>$departement);
-		$Mairie->createInseeData($insee_code, $current_process, $comURL, $region, $departement);
+		$order_number = intval($mairieSplit[2]);
+		$links[] = array("insee"=>$insee_code, "order_number"=>$order_number, "comURL"=>$comURL, "region"=>$region, "departement"=>$departement);
+		$Mairie->createInseeData($insee_code, $order_number, $current_process, $comURL, $region, $departement);
 	}
-
-
-
-	//echo(nl2br("sortie de getComLinks \n"));
 	return $links;
 }
-
-
-function buildTable($array)
-{
-	echo("Entrée dans buildTable");
-	echo("<br>");
-    // start table
-    $html = '<table>';
-    // header row
-    $html .= '<tr>';
-    foreach($array[0] as $key=>$value){
-            $html .= '<th>' . htmlspecialchars($key) . '</th>';
-        }
-    $html .= '</tr>';
-
-    // data rows
-    foreach( $array as $key=>$value){
-        $html .= '<tr>';
-        foreach($value as $key2=>$value2){
-            $html .= '<td>' . htmlspecialchars($value2) . '</td>';
-        }
-        $html .= '</tr>';
-    }
-
-    // finish table and return it
-
-    $html .= '</table>';
-	echo("Sortie de buildTable");
-	echo("<br>");
-    return $html;
-}
-
 ?>
 
 
