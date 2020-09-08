@@ -20,11 +20,15 @@ echo(nl2br("Process actuel : " . $current_process . "\n"));
 /* */
 
 if (isset($_GET['start']) && isset($_GET['nbrow'])) // On a un level maximum
-{	$start = $_GET['start'];	$nbRow = $_GET['nbrow'];
+{
+	$start = $_GET['start'];
+	$nbRow = $_GET['nbrow'];
 	echo(nl2br("Début : " . $start . ", nombre de lignes : " . $nbRow . "\n"));
 }
 else // Il manque des paramètres, on avertit le visiteur
-{	$start = -1;	$nbRow = -1;
+{
+	$start = -1;
+	$nbRow = -1;
 	echo(nl2br("Début : " . $start . ", nombre de lignes : " . $nbRow . "\n"));
 }
 
@@ -39,12 +43,15 @@ if($start == -1 && $nbRow == -1) {
 }
 
 
-//var_dump($result);$nbCom = count($result);
+//var_dump($result);
+$nbCom = count($result);
 
 
 /* */	
 for($j = 0; $j < $nbCom; $j++) {
-	$currentURL = $result[$j]["url"];	$currentInseeCode = $result[$j]["insee_code"];	//https://www.amf.asso.fr/annuaire-communes-intercommunalites?refer=commune&dep_n_id=971&insee=97113
+	$currentURL = $result[$j]["url"];
+	$currentInseeCode = $result[$j]["insee_code"];
+	//https://www.amf.asso.fr/annuaire-communes-intercommunalites?refer=commune&dep_n_id=971&insee=97113
 	$amfURL = "https://www.amf.asso.fr/annuaire-communes-intercommunalites?refer=commune&dep_n_id=";
 	
 	/* Remplacé par un case when
@@ -115,7 +122,6 @@ for($j = 0; $j < $nbCom; $j++) {
 		
 	} else {
 		echo(nl2br("Etape " . $j . " sur " . $nbCom . ", ville AMF : " . $currentInseeCode . ", état : HORS SCOPE \n"));
-	}}
-
-
+	}
+}
 ?>
