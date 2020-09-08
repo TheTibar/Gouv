@@ -32,7 +32,7 @@ $Suivi->setCurrentPage(1);
 //c'est la page Get_Next_Mairies_Annuaire_Officiel.php qui s'en occupe, et que l'on peut appeler plusieurs fois sans risque d'écraser des données.
 
 
-for($i = 1; $i < $maxPage; $i++) { //pour les tests, on peut remplacer $maxPage par une petite valeur
+for($i = 1; $i <= $maxPage; $i++) { //pour les tests, on peut remplacer $maxPage par une petite valeur
 	echo(nl2br("Page " . $i ." sur " . $maxPage . " : "));
 	$urlRoot = "https://lannuaire.service-public.fr/navigation/mairie?page=" . $i;
 	

@@ -90,9 +90,6 @@ class Suivi {
 	public function getLastPage() {
 		$instance = \ConnectDB::getInstance();
         $conn = $instance->getConnection();
-        
-        //$user_token = mysqli_real_escape_string($mysql_db_conn, $user_token);
-		$currentPage = mysqli_real_escape_string($conn, $currentPage);
 		
 		$sql = "SELECT suivi_value 
 				FROM gouv_mairie_suivi 
@@ -119,9 +116,6 @@ class Suivi {
 	public function getCurrentPage() {
 		$instance = \ConnectDB::getInstance();
         $conn = $instance->getConnection();
-        
-        //$user_token = mysqli_real_escape_string($mysql_db_conn, $user_token);
-		$currentPage = mysqli_real_escape_string($conn, $currentPage);
 		
 		$sql = "SELECT suivi_value 
 				FROM gouv_mairie_suivi 
