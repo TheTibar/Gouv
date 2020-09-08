@@ -95,9 +95,8 @@ class Mairie {
 				$result[] = $line;
 			}
 		} else {
-			echo("getting links json error");
+			echo("getting url error");
 		}
-
 		return $result;
 		
 	}
