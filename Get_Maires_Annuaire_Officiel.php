@@ -56,12 +56,14 @@ for($j = 0; $j < $nbCom; $j++) {
 		$long = 0;	$lat = 0;
 	$coordTags = $xPath->evaluate('//script[contains(., "longitude")]'); //Ok
 	foreach($coordTags as $coorTag) {
-		$coord = $coorTag->nodeValue;		$deb = strpos($coord, "{");		$fin = strrpos($coord, "}");		$coord = urldecode(substr($coord, $deb, $fin - $deb + 1));		//echo(nl2br("Coord avant remplacement : " . $coord));		$array_in = ['ignKey', 'ignMap', 'initPoint', 'longitude', 'latitude', 'name', 'description', 'tokenForSearchOnAddress'];		$array_out = ['"ignKey"', '"ignMap"', '"initPoint"', '"longitude"', '"latitude"', '"name"', '"description"', '"tokenForSearchOnAddress"'];				$coord = str_replace($array_in, $array_out, $coord);		//echo(nl2br("Coord après remplacement : " . $coord));				$coordArray = json_decode($coord, true);		$long = $coordArray["initPoint"]["longitude"];		$lat = $coordArray["initPoint"]["latitude"];	}		
-		//echo(nl2br("Email : " . $email . " [long, lat] : [" . $long . ", " . $lat . "] \n"));	//var_dump($coord);	/**/	$cityNames = $xPath->evaluate('//h1'); //Ok
+		$coord = $coorTag->nodeValue;		$deb = strpos($coord, "{");		$fin = strrpos($coord, "}");		$coord = urldecode(substr($coord, $deb, $fin - $deb + 1));		//echo(nl2br("Coord avant remplacement : " . $coord));		$array_in = ['ignKey', 'ignMap', 'initPoint', 'longitude', 'latitude', 'name', 'description', 'tokenForSearchOnAddress'];		$array_out = ['"ignKey"', '"ignMap"', '"initPoint"', '"longitude"', '"latitude"', '"name"', '"description"', '"tokenForSearchOnAddress"'];				$coord = str_replace($array_in, $array_out, $coord);		//echo(nl2br("Coord après remplacement : " . $coord));				$coordArray = json_decode($coord, true);		$long = isset($coordArray["initPoint"]["longitude"]) ? $coordArray["initPoint"]["longitude"] : 0;		$lat = isset($coordArray["initPoint"]["latitude"]) ? $coordArray["initPoint"]["latitude"] : 0;	}		
+			//var_dump($coord);	/**/	$cityNames = $xPath->evaluate('//h1'); //Ok
 	foreach($cityNames as $cityName) {
 		$name = $cityName->nodeValue;
 	}	$hab = 0;
-	$mayor = "";	
+	$mayor = "";
+	
+	echo(nl2br("Ville : " . $name . ", email : " . $email . " [long, lat] : [" . $long . ", " . $lat . "] \n"));	
 	$res = $Mairie->createMairieDetail($currentInseeCode, $currentURL, $name, $mayor, $email, $hab, $long, $lat, $current_process);
 	if($res) {
 		echo(nl2br("OK \n"));
