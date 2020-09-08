@@ -176,7 +176,7 @@ class Mairie {
 				SET maire = '$maire', habitants = $hab
 				WHERE insee_code = '$insee_code'";
 		
-		echo($sql);
+		//echo($sql);
 		try
 		{
 			if (mysqli_query($conn, $sql))

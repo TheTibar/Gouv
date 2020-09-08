@@ -5,3 +5,7 @@ Index sur insee_code /!\ remplacer type text par type varchar(5)
 ALTER TABLE `gouv`.`gouv_mairie_insee` 
 CHANGE COLUMN `insee_code` `insee_code` VARCHAR(5) NOT NULL ;
 
+Créer adresses email
+	-> contact
+	-> administrateur
+	-> autres ?
