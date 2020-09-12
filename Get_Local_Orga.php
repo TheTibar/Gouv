@@ -175,7 +175,10 @@ function getOrgaByRoot($urlRoot, $currentProcess)
                 
                 /*
                  * ici, récupérer valeur de a et de //a/@href de chaque $currentUrl
-                 * 
+                 * récupérer également longitude et latitude
+                 * récupérer l'email et l'url du site
+                 * splitter l'url pour obtenir la région et le département
+                 * https://lannuaire.service-public.fr/region/departement/
                  * 
                  */
                 
