@@ -71,7 +71,25 @@ function curl_get_contents_AMF($url)
 	}
 	
 	return $pageNumber;
-	 
+ }
+ 
+ 
+ function getLastPage($url)
+ {
+     $pageNumber = 1;
+     $content = curl_get_contents($url);
+     $dom = new DOMDocument;
+     libxml_use_internal_errors(true);
+     $dom->loadHTML($content);
+     
+     $xPath = new DOMXPath($dom);
+     
+     $lastPages = $xPath->evaluate('//li[preceding-sibling::li[contains(., "...")] and following-sibling::li[contains(., "Suivant")]]'); //Ok
+     foreach($lastPages as $lastPage) {
+         $pageNumber = $lastPage->nodeValue;
+     }
+     
+     return $pageNumber;
  }
 
 
