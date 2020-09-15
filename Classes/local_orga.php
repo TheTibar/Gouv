@@ -123,7 +123,7 @@ class Local_Orga {
 	    $sql = "INSERT INTO gouv_local_orga_detail (gouv_local_orga_id, region, departement, longit, latit, email, website, process_id)
                 VALUES ($currentId, '$region', '$departement', $long, $lat, '$email', '$website', $currentProcess)";
 	    
-	    echo(nl2br($sql . "\n"));
+	    //echo(nl2br($sql . "\n"));
 	    
 	    try
 	    {
