@@ -65,7 +65,8 @@ function curl_get_contents_AMF($url)
 	
 	$xPath = new DOMXPath($dom);
 
-	$lastPages = $xPath->evaluate('//li[preceding-sibling::li[contains(., "...")] and following-sibling::li[contains(., "Suivant")]]'); //Ok
+	//$lastPages = $xPath->evaluate('//li[preceding-sibling::li[contains(., "...")] and following-sibling::li[contains(., "Suivant")]]'); //KO si on n'a pas de valeur '...'
+	$lastPages = $xPath->evaluate('//li[following-sibling::li[contains(., "Suivant")]][last()]'); //Ok
 	foreach($lastPages as $lastPage) {
 		$pageNumber = $lastPage->nodeValue;
 	}
@@ -84,7 +85,9 @@ function curl_get_contents_AMF($url)
      
      $xPath = new DOMXPath($dom);
      
-     $lastPages = $xPath->evaluate('//li[preceding-sibling::li[contains(., "...")] and following-sibling::li[contains(., "Suivant")]]'); //Ok
+     //$lastPages = $xPath->evaluate('//li[preceding-sibling::li[contains(., "...")] and following-sibling::li[contains(., "Suivant")]]'); //KO si on n'a pas de valeur '...'
+     $lastPages = $xPath->evaluate('//li[following-sibling::li[contains(., "Suivant")]][last()]'); //Ok
+     
      foreach($lastPages as $lastPage) {
          $pageNumber = $lastPage->nodeValue;
      }

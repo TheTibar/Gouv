@@ -1,4 +1,4 @@
-CREATE TABLE `gouv`.`gouv_local_orga` (
+CREATE TABLE `gouv_local_orga` (
   `gouv_local_orga_id` INT NOT NULL AUTO_INCREMENT,
   `theme` VARCHAR(150) NULL,
   `id` INT NULL,

@@ -30,28 +30,36 @@ $currentProcess = $process->__get("current_process");
 echo(nl2br("Process actuel : " . $currentProcess . "\n"));
 
 
-$urlRoot = 'https://lannuaire.service-public.fr/themes?theme=administration-locale#administration-locale';
+$urlRoot = 'https://lannuaire.service-public.fr/';
 $level = 0;
 $filter_url = "https://lannuaire.service-public.fr/";
 
-$resultRoot = getRootThemes($urlRoot);
-//echo(nl2br("resultRoot : " . count($resultRoot) . "\n"));
-//echo(buildTable($resultRoot));
 
-$urlRoot = getRootUrls($urlRoot, $resultRoot);
-//echo(nl2br("resultRoot : " . count($urlRoot) . "\n"));
-//echo(buildTable($urlRoot));
 
-writeDb($urlRoot, $currentProcess);
+$rootThemesArray = getRootThemes($urlRoot);
+echo(nl2br("rootThemesArray : " . count($rootThemesArray) . "\n"));
+echo(buildTable($rootThemesArray));
+writeDb($rootThemesArray, $currentProcess);
 
-getOrgaByRoot($urlRoot, $currentProcess);
 
+$urlRootArray = getRootUrls($rootThemesArray);
+echo(nl2br("urlRootArray : " . count($urlRootArray) . "\n"));
+echo(buildTable($urlRootArray));
+
+writeDb($urlRootArray, $currentProcess);
+
+/**/
+$orgaByRoot = getOrgaByRoot($urlRootArray);
+echo(nl2br("orgaByRoot : " . count($orgaByRoot) . "\n"));
+//echo(buildTable($orgaByRoot));
+
+writeDb($orgaByRoot, $currentProcess);
 
 
 
 function getRootThemes($urlRoot)
 {
-    $localOrga = new Local_Orga();
+    //$localOrga = new Local_Orga();
     $content = curl_get_contents($urlRoot);
     $themes = [];
     
@@ -61,52 +69,68 @@ function getRootThemes($urlRoot)
     
     $xPath = new DOMXPath($dom);
     
-    $anchorTags = $xPath->evaluate('//div[@class="fiche-item"]//h2');
+    $anchorTags = $xPath->evaluate('//h3');
+    $urlTags = $xPath->evaluate('//h3/a/@href');
     $i = 1;
-    /*
-    echo("anchor_tags : ");
-    var_dump($anchorTags);
-    echo(nl2br("\n"));
-   */
     foreach ($anchorTags as $anchorTag) {
         $theme = $anchorTag->nodeValue;
-        $themes[] = array("id"=>$i, "theme"=>$theme);
+        $themes[] = array("theme"=>$theme, "id"=>$i, "remote_id" => $i, "level" => 0, "link" => "", "label" => $theme, "father_id" => 0);
         $i = $i + 1;
+    }
+    $i = 1;
+    
+    foreach ($urlTags as $urlTag) {
+        $url = $urlTag->nodeValue;
+        $urls[] = array("id"=>$i, "link" => $url);
+        $i = $i + 1;
+    }
+    
+    for($i = 0; $i < count($themes); $i++)
+    {
+        $themes[$i]["link"] = $urls[$i]["link"];
     }
     return $themes;
 }
 
-function getRootUrls($urlRoot, $resultRoot) 
+function getRootUrls($rootThemesArray) 
 {
     $localOrga = new Local_Orga();
-    $content = curl_get_contents($urlRoot);
+    
     $links = [];
     $label = [];
     $url = [];
     
-    $dom = new DOMDocument();
-    libxml_use_internal_errors(true);
-    $dom->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'));
-    
-    $xPath = new DOMXPath($dom);
 
-    for($i = 1; $i < count($resultRoot); $i++)
+
+    for($i = 1; $i < count($rootThemesArray); $i++)
     {
-        //echo(nl2br("fiche-item-" . $resultRoot[$i]["id"] . "\n"));
+        echo(nl2br("currentUrl : " . $rootThemesArray[$i]["link"] . "\n"));
+        $content = curl_get_contents($rootThemesArray[$i]["link"]);
+        $dom = new DOMDocument();
+        libxml_use_internal_errors(true);
+        $dom->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'));
+        
+        $xPath = new DOMXPath($dom);
+        
+        
+        //echo(nl2br("father_id : " . $rootThemesArray[$i]["remote_id"] . ", fiche-item-" . $rootThemesArray[$i]["id"] . "\n"));
         //il faut récupérer : la valeur du thème : $resultRoot[$i]["label"]
         //la valeur des champs a //div[@id="fiche-item-2"]//a
         //la valeur des champs href //div[@id="fiche-item-2"]//a/@href
-        $theme = $resultRoot[$i]["theme"];
+        $theme = $rootThemesArray[$i]["theme"];
+        $father_id = $rootThemesArray[$i]["remote_id"];
         //echo(nl2br($theme));
-        $eval_a = '//div[@id="fiche-item-' . $resultRoot[$i]["id"] .'"]//a';
+        $eval_a = '//div[@id="fiche-item-' . $rootThemesArray[$i]["id"] .'"]//a';
         
         $anchorTags = $xPath->evaluate($eval_a);
         
         foreach ($anchorTags as $anchorTag) {
-            $label[] = array("theme" => $theme, "label" => strstr($anchorTag->nodeValue, " (", TRUE));
+            $label[] = array("theme" => $theme, "label" => strstr($anchorTag->nodeValue, " (", TRUE), "father_id" => $father_id);
         }
+        //var_dump($label);
+        //echo(nl2br("\n"));
         
-        $eval_href = '//div[@id="fiche-item-' . $resultRoot[$i]["id"] .'"]//a/@href';
+        $eval_href = '//div[@id="fiche-item-' . $rootThemesArray[$i]["id"] .'"]//a/@href';
         //echo($eval_href);
         
         $anchorTags = $xPath->evaluate($eval_href);
@@ -123,7 +147,7 @@ function getRootUrls($urlRoot, $resultRoot)
 */
     for($k = 0; $k < count($label); $k++)
     {
-        $links[] = array("theme"=>$label[$k]["theme"], "id"=>$k, "remote_id" => $k, "level" => 0, "link"=>$url[$k]["url"], "label"=>$label[$k]["label"], "father_id" => 0);
+        $links[] = array("theme"=>$label[$k]["theme"], "id"=>$k, "remote_id" => $k, "level" => 1, "link"=>$url[$k]["url"], "label"=>$label[$k]["label"], "father_id" => $label[$k]["father_id"]);
         //echo(nl2br("theme : " . $label[$k]["theme"] . ", label : " . $label[$k]["label"] . ", url : " . $url[$k]["url"] . "\n"));
     }
 
@@ -131,135 +155,96 @@ function getRootUrls($urlRoot, $resultRoot)
     return($links);
 }
 
-function writeDb($urlRoot, $currentProcess)
+function writeDb($urlRootArray, $currentProcess)
 {
     $Local_Orga = new Local_Orga();
-    for($i = 0; $i < count($urlRoot); $i++)
+    for($i = 0; $i < count($urlRootArray); $i++)
     {
-        $theme = $urlRoot[$i]["theme"];
-        $id = $urlRoot[$i]["id"];
-        $remote_id = $urlRoot[$i]["remote_id"];
-        $level = $urlRoot[$i]["level"];
-        $link = $urlRoot[$i]["link"];
-        $label = $urlRoot[$i]["label"];
-        $father_id = $urlRoot[$i]["father_id"];
+        $theme = $urlRootArray[$i]["theme"];
+        $id = $urlRootArray[$i]["id"];
+        $remote_id = $urlRootArray[$i]["remote_id"];
+        $level = $urlRootArray[$i]["level"];
+        $link = $urlRootArray[$i]["link"];
+        $label = $urlRootArray[$i]["label"];
+        $father_id = $urlRootArray[$i]["father_id"];
         $Local_Orga->createLocalOrga($theme, $id, $remote_id, $level, $link, $label, $father_id, $currentProcess);
     }
 }
 
-function getOrgaByRoot($urlRoot, $currentProcess)
+function getOrgaByRoot($urlRootArray)
 {
-    //for($i = 0; $i < count($urlRoot); $i++)
+    
     $children = [];
-    for($i = 0; $i < 10; $i++)
+    $label = [];
+    $url = [];
+    for($i = 0; $i < count($urlRootArray); $i++)
+    //for($i = 0; $i < 3; $i++)
     {
         //1 on ouvre la page $i
-        $url = $urlRoot[$i]["link"];
-        $content = curl_get_contents($url);
+        $urlRoot = $urlRootArray[$i]["link"];
+        $theme = $urlRootArray[$i]["theme"];
         
-        $label = $urlRoot[$i]["label"];
-        $father_id = $urlRoot[$i]["remote_id"];
+        $content = curl_get_contents($urlRoot);
+        
+        //$label = $urlRootArray[$i]["label"];
+        $father_id = $urlRootArray[$i]["remote_id"];
         
         //2 on récupère le nombre de pages
-        $pageNumber = getLastPage($url);
-        echo(nl2br($url . " (nombre de pages : " . $pageNumber . ") \n"));
+        $pageNumber = getLastPage($urlRoot);
+        //echo(nl2br($urlRoot . " (nombre de pages : " . $pageNumber . ") \n"));
         
         //3 on récupère les urls de la page //ul[@class="list-arrow list-orga"]//a
-        if($urlRoot[$i]["label"] <> 'Mairie') //on élimine les 1200 pages des mairies
+        if($urlRootArray[$i]["label"] <> 'Mairie') //on élimine les 1200 pages des mairies
         {
+            
             for($j = 1; $j <=$pageNumber; $j++)
             {
-                $currentUrl = $url . "?page=" . $j;
-                echo(nl2br($currentUrl . "\n"));
+                $currentUrl = $urlRoot . "?page=" . $j;
+                //echo(nl2br($currentUrl . "\n"));
                 
+                $content = curl_get_contents($currentUrl);
+                
+                $dom = new DOMDocument();
+                libxml_use_internal_errors(true);
+                $dom->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'));
+                
+                $xPath = new DOMXPath($dom);
                 
                 /*
-                 * ici, récupérer valeur de a et de //a/@href de chaque $currentUrl
-                 * récupérer également longitude et latitude
-                 * récupérer l'email et l'url du site
-                 * splitter l'url pour obtenir la région et le département
-                 * https://lannuaire.service-public.fr/region/departement/
-                 * 
+                 * ici, récupérer valeur de 
+                 *      a : //ul[@class="list-arrow list-orga"]//li//a
+                 *      href : //ul[@class="list-arrow list-orga"]//li//a/@href 
+                 * de chaque $currentUrl
                  */
+
                 
+                $eval_a = '//ul[@class="list-arrow list-orga"]//li//a';
                 
+                $anchorTags = $xPath->evaluate($eval_a);
                 
+                foreach ($anchorTags as $anchorTag) {
+                    $label[] = array("theme" => $theme, "label" => $anchorTag->nodeValue, "father_id" => $father_id);
+                }
                 
+                $eval_href = '//ul[@class="list-arrow list-orga"]//li//a/@href';
+                //echo($eval_href);
                 
+                $anchorTags = $xPath->evaluate($eval_href);
+                
+                foreach ($anchorTags as $anchorTag) {
+                    $url[] = array("url" => $anchorTag->nodeValue);
+                }
             }
         }
     }
+    for($k = 0; $k < count($label); $k++)
+    {
+        $links[] = array("theme"=>$label[$k]["theme"], "id"=>$k, "remote_id" => $k, "level" => 2, "link"=>$url[$k]["url"], "label"=>$label[$k]["label"], "father_id" => $label[$k]["father_id"]);
+        //echo(nl2br("theme : " . $label[$k]["theme"] . ", label : " . $label[$k]["label"] . ", url : " . $url[$k]["url"] . "\n"));
+    }
+    
+    return($links);
 }
-
-
-//vient du fichier d'origine
-
-
-function getRemoteId($url)
-{
-	$remoteId = substr($url, strrpos($url, "_") + 1);
-	return $remoteId;
-}
-
-function getTitleContent($url)
-{
-	//echo("url Title Content : " . $url);
-
-	$content = curl_get_contents($url);
-	
-	$dom = new DOMDocument;
-	libxml_use_internal_errors(true);
-	$dom->loadHTML($content);
-
-	foreach ($dom->getElementsByTagName('h1') as $node) {
-		$label = utf8_decode($node->nodeValue);
-	}
-	return $label;
-	
-	
-
-}
-
-function dumpNode($nodes)
-{
-	foreach($nodes as $node) {
-		echo $node->nodeValue, PHP_EOL;
-	}
-}
-
-function getNextLevelData($url, $fatherId, $remoteFatherId, $level, $filter_url, $current_process)
-{
-	//attention, on peut avoir des class "col-seconde" ou des class "annuaire"
-	$Orga = new Orga();
-	$i = 0;
-	$content = curl_get_contents($url);
-	$dom = new DOMDocument;
-	$links = [];
-	
-	libxml_use_internal_errors(true);
-	$dom->loadHTML($content);
-	
-	$xPath = new DOMXPath($dom);
-
-	$anchorTags = $xPath->evaluate('//div[@class="' . $class . '"]//a/@href'); //Ok
-	
-	foreach ($anchorTags as $anchorTag) {
-		if (substr($anchorTag->nodeValue, 0, strlen($filter_url)) === $filter_url) {
-			$remoteId = getRemoteId($anchorTag->nodeValue);
-			$link = $anchorTag->nodeValue;
-			$label = getTitleContent($anchorTag->nodeValue);
-			$links[] = array("id"=>$i, "remoteId"=>$remoteId,  "level"=>$level, "link"=>$link, "label"=>$label, "father"=>$remoteFatherId);
-			$Orga->createOrga($i, $remoteId, $level, $link, $label, $remoteFatherId, $current_process);
-			$i = $i + 1;
-		}
-	}
-
-
-	
-	return $links;
-
-}
-
 
 function buildTable($array)
 {

@@ -13,6 +13,7 @@ class Local_Orga {
     private $label;
 	private $father_id;
 	private $person;
+	private $childUrls = [];
     
     public function test()
     {
@@ -72,9 +73,80 @@ class Local_Orga {
         }
     }
 	
-	public function getSubOrgaByLevel($level) {
-		$level = mysqli_real_escape_string($conn, $level);
+    public function getChildUrls($currentProcess) {
+	    $instance = \ConnectDB::getInstance();
+	    $conn = $instance->getConnection();
+	    
+	    $currentProcess  = mysqli_real_escape_string($conn, $currentProcess);
+	    
+	    $sql = "SELECT GLO.gouv_local_orga_id as local_orga_id, GLO.link as link
+                FROM gouv_local_orga GLO
+                WHERE GLO.process_id = $currentProcess
+                AND GLO.LEVEL = 2
+                AND NOT EXISTS (
+					SELECT 1 
+                    FROM gouv_local_orga_detail GLOD 
+                    WHERE GLO.process_id = GLOD.process_id 
+						AND GLO.gouv_local_orga_id = GLOD.gouv_local_orga_id)";
+	    
+	    //echo($sql);
+	    
+	    if ($sql_result = mysqli_query($conn, $sql))
+	    {
+	        while ($line = mysqli_fetch_assoc($sql_result))
+	        {
+	            $result[] = $line;
+	        }
+	        $this->childUrls = $result;
+	        return true;
+	    } else {
+	        echo("getChildUrls error");
+	        return false;
+	    }
 	}
+	
+	public function createLocalOrgaDetail($currentId, $region, $departement, $long, $lat, $email, $website, $currentProcess) {
+	    //echo(nl2br("Local orga id : " . $currentId . ", région : " . $region . ", département : " . $departement . ", long : " . $long . ", lat : " . $lat . ", email : " . $email . ", website : " . $website . "\n"));
+	    
+	    $instance = \ConnectDB::getInstance();
+	    $conn = $instance->getConnection();
+	    
+	    $currentId  = mysqli_real_escape_string($conn, $currentId);
+	    $region  = mysqli_real_escape_string($conn, $region);
+	    $departement  = mysqli_real_escape_string($conn, $departement);
+	    $long  = mysqli_real_escape_string($conn, $long);
+	    $lat  = mysqli_real_escape_string($conn, $lat);
+	    $email  = mysqli_real_escape_string($conn, $email);
+	    $website  = mysqli_real_escape_string($conn, $website);
+	    $currentProcess  = mysqli_real_escape_string($conn, $currentProcess);
+	    
+	    $sql = "INSERT INTO gouv_local_orga_detail (gouv_local_orga_id, region, departement, longit, latit, email, website, process_id)
+                VALUES ($currentId, '$region', '$departement', $long, $lat, '$email', '$website', $currentProcess)";
+	    
+	    echo(nl2br($sql . "\n"));
+	    
+	    try
+	    {
+	        if (mysqli_query($conn, $sql))
+	        {
+	            //echo("0");
+	            return 0; //Cr�ation OK
+	        }
+	        else
+	        {
+	            //echo("-1");
+	            return -1; //Cr�ation KO
+	        }
+	    }
+	    catch (Exception $e)
+	    {
+	        echo ("Erreur : " . $e);
+	    }
+	    
+	    
+	    
+	}
+	
 	
 	public function getJSON($current_process) {
 		$instance = \ConnectDB::getInstance();

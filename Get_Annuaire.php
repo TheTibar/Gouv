@@ -8,14 +8,12 @@ require_once __DIR__ . '/Classes/process.php';
 
 if (isset($_GET['max_level'])) // On a un level maximum
 {
-	echo 'Level max : ' . $_GET['max_level'];
-	echo("<br>");
+	echo(nl2br("Level max : " . $_GET['max_level'] . "\n"));
 	$max_level = $_GET['max_level'];
 }
 else // Il manque des paramètres, on avertit le visiteur
 {
-	echo 'Level max par défaut : 1';
-	echo("<br>");
+	echo(nl2br("Level max par défaut : 20 \n"));
 	$max_level = 20;
 }
 
@@ -26,8 +24,8 @@ $process->createProcess();
 //On récupère l'id du nouveau process
 $process->getCurrentProcess();
 $current_process = $process->__get("current_process");
-echo("Process actuel : " . $current_process);
-echo("<br>");
+echo(nl2br("Process actuel : " . $current_process . "\n"));
+
 
 $urlRoot = 'https://lannuaire.service-public.fr/navigation/ministeres/';
 $level = 0;
@@ -36,55 +34,45 @@ $filter_url = "https://lannuaire.service-public.fr/";
 
 $resultRoot = getRootLinks($id, $urlRoot, $level, $filter_url, $current_process);
 $result = $resultRoot;
-echo("resultRoot : " . count($result));
-//echo("<br>");
-//echo(buildTable($resultRoot));
+echo(nl2br("resultRoot : " . count($result) . "\n"));
+
 
 /*Faire itérer tant que le level désiré ($max_level) n'est pas atteint*/
 do
 {
-	echo("Level en cours : " . $level);
-	echo("<br>");
+	echo(nl2br("Level en cours : " . $level . "\n"));
+
 	//1 - on récupère la liste des liens en cours
 	$fatherLinks = array_filter($result, function ($var) use($level) {
 		return ($var["level"] == $level);
 	});
-	echo("fatherLinks");
-	echo("<br>");
+	echo(nl2br("fatherLinks" . "\n"));
 	$fatherLinks = array_values($fatherLinks); //permet de renuméroter le tableau
 	//var_dump($fatherLinks);
 
 	//2 - On définit leurs enfants comme le niveau + 1 des liens en cours
 	$level = $level + 1;
-	echo("Level des enfants : " . $level);
-	echo("<br>");
+	echo(nl2br("Level des enfants : " . $level . "\n"));
 	//3 - Les données intéressantes peuvent se trouver dans les classes "col-second" ou "annuaire"
 	$classes = ["col-second", "annuaire"];
 
 	//4 - Pour chaque lien de fatherLinks, on va chercher les enfants
-	echo("Nombre de parents à ce niveau : " . count($fatherLinks));
-	echo("<br>");
+	echo(nl2br("Nombre de parents à ce niveau : " . count($fatherLinks) . "\n"));
 	
 	for($cpt=0; $cpt<count($fatherLinks); $cpt++) 
 	//for($cpt=0; $cpt<3; $cpt++) //permet de tester sur uniquement quelques lignes parent
 	{
-		echo("i : " . $cpt . " link : " . $fatherLinks[$cpt]["link"] . " id : " . $fatherLinks[$cpt]["id"] . " remoteId : " . $fatherLinks[$cpt]["remoteId"]);
-		echo("<br>");
+		echo(nl2br("i : " . $cpt . " link : " . $fatherLinks[$cpt]["link"] . " id : " . $fatherLinks[$cpt]["id"] . " remoteId : " . $fatherLinks[$cpt]["remoteId"] . "\n"));
 		$resultChild = getNextLevelData($classes, $fatherLinks[$cpt]["link"], $fatherLinks[$cpt]["id"], $fatherLinks[$cpt]["remoteId"], $level, $filter_url, $current_process);
-		//var_dump($result2);
-		//echo("resultChild");
-		//echo("<br>");
-		//echo(buildTable($resultChild));
 		$result = array_merge($result, $resultChild);
-		echo("count after merge : " . count($result));
-		echo("<br>");
-		//echo(buildTable($result));
+		echo(nl2br("Count after merge : " . count($result) . "\n"));
 	}
+	
 
 //5 - On continue tant que count($fatherLinks) > 0 et que $level < 2 
 }while ($level <= $max_level);
 
-echo("On sort de la boucle DO au level : " . $level);
+echo(nl2br("On sort de la boucle DO au level : " . $level . "\n"));
 
 function curl_get_contents($url)
 {
@@ -109,7 +97,6 @@ function getRootLinks($id, $urlRoot, $level, $filter_url, $current_process)
 	$dom->loadHTML($content);
 
 	$xPath = new DOMXPath($dom);
-	//Partie Ok sauf personnes
 	$anchorTags = $xPath->evaluate('//div[@id="' . $id . '"]//a/@href'); //Ok
 	$i = 0;
 	
@@ -135,8 +122,6 @@ function getRemoteId($url)
 
 function getTitleContent($url)
 {
-	//echo("url Title Content : " . $url);
-
 	$content = curl_get_contents($url);
 	
 	$dom = new DOMDocument;
@@ -161,8 +146,6 @@ function dumpNode($nodes)
 
 function getNextLevelData($classes, $url, $fatherId, $remoteFatherId, $level, $filter_url, $current_process)
 {
-	echo("Entrée dans getNextLevelData");
-	echo("<br>");
 	//attention, on peut avoir des class "col-seconde" ou des class "annuaire"
 	$Orga = new Orga();
 	$i = 0;
@@ -176,8 +159,6 @@ function getNextLevelData($classes, $url, $fatherId, $remoteFatherId, $level, $f
 	$xPath = new DOMXPath($dom);
 	
 	foreach($classes as $class) {
-		echo("Class xPath en cours : " . $class);
-		echo("<br>");
 		$anchorTags = $xPath->evaluate('//div[@class="' . $class . '"]//a/@href'); //Ok
 		
 		foreach ($anchorTags as $anchorTag) {
@@ -191,13 +172,9 @@ function getNextLevelData($classes, $url, $fatherId, $remoteFatherId, $level, $f
 			}
 		}
 	}
-	echo("Sortie de getNextLevelData");
-	echo("<br>");
-	
 	return $links;
 
 }
-
 
 function buildTable($array)
 {
@@ -230,12 +207,3 @@ function buildTable($array)
 }
 
 ?>
-
-
-
-
-
-
-
-
-
