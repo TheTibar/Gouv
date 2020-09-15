@@ -1,0 +1,12 @@
+SELECT count(*) as reste
+                FROM gouv_local_orga GLO
+                WHERE GLO.process_id = 242
+                AND GLO.LEVEL = 2
+                AND NOT EXISTS (
+					SELECT 1 
+                    FROM gouv_local_orga_detail GLOD 
+                    WHERE GLO.process_id = GLOD.process_id 
+						AND GLO.gouv_local_orga_id = GLOD.gouv_local_orga_id)
+						
+
+ajouter indexes sur GLO.gouv_local_orga_id et GLOD.gouv_local_orga_id
