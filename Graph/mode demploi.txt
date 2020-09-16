@@ -1,4 +1,0 @@
-lancer le getJson
-Récupérer le fichier et le déposer dans le répertoire data
-Modifier les json source dans index.html
-Si le js appelé n'est plus dispo, une copie est faite dans src

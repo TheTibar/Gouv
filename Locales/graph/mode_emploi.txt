@@ -1,0 +1,8 @@
+SUR REIVAX
+lancer le getJson /Gouv/Locales/Get_Local_Json_Map
+Récupérer le fichier graph/data/data_map_XXX.json
+SUR DS
+le déposer dans le répertoire /Graph/Locales/graph/data/old pour le sauvegarder
+Supprimer le fichier /Graph/Locales/graph/data/data_map.json
+Le remplacer par le fichier qui vient d'être récupéré avec le nom sans _XXX
+

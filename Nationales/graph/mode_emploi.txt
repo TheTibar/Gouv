@@ -1,0 +1,7 @@
+SUR REIVAX
+lancer le getJson /Gouv/Nationales/Get_Json.php
+Récupérer le fichier graph/data/data_node_links_person_XXX.json 
+SUR DS
+le déposer dans le répertoire /Graph/Nationales/graph/data/old pour le sauvegarder
+Supprimer le fichier /Graph/Nationales/graph/data/data_node_links_person.json
+Le remplacer par le fichier qui vient d'être récupéré avec le nom sans _XXX

@@ -1,0 +1,62 @@
+<?php
+/**/
+require_once __DIR__ . '/Classes/orga.php';
+require_once __DIR__ . '/Classes/process.php';
+
+echo(nl2br("\n ne pas oublier de mettre à jour le niveau 0 avec cette requête : \n update gouv_orga \n set father_id = 172210 \n where father_id = 0 \n and remote_id <> 172210;"));
+echo(nl2br("\n ne pas oublier de supprimer les lignes qui bouclent avec cette requête : \n delete from gouv_orga where remote_id = father_id \n"));
+/**/
+$process = new Process();
+//On récupère l'id du nouveau process
+$process->getCurrentProcess();
+$current_process = $process->__get("current_process"); //#TODO_PROCESS
+
+echo(nl2br("\n Process actuel : " . $current_process . "\n"));
+
+//Pour générer un JSON hierarchique (attention, la fonction encapsule dans [] alors que les programmes appelant n'ont pas besoin de ce niveau
+$Orga = new Orga();
+$result = $Orga->getFlatArray($current_process);
+
+//var_dump($result);
+
+// Transform the data
+$outputTree = transformTree($result, 0);
+$outputTree = $outputTree[0];
+
+$nodes_json = json_encode($outputTree, JSON_UNESCAPED_UNICODE);
+
+//var_dump($nodes_json);
+
+$Orga->writeToServer("/d3graph/flare_" . $current_process . ".json", $nodes_json);
+
+
+function transformTree($treeArray, $parentId = null)
+{
+    $output = [];
+
+    // Read through all nodes of the tree
+    foreach ($treeArray as $node) {
+
+        // If the node parent is same as parent passed in argument
+        if ($node['parent'] == $parentId) {
+
+            // Get all the children for that node, using recursive method
+            $children = transformTree($treeArray, $node['id']);
+
+            // If children are found, add it to the node children array
+            if ($children) {
+                $node['children'] = $children;
+            }
+
+            // Add the main node with/without children to the main output
+            $output[] = $node;
+
+            // Remove the node from main array to avoid duplicate reading, speed up the process
+            unset($node);
+        }
+    }
+	
+    return $output;
+}
+
+?>
