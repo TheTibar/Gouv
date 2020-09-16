@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+              "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="0.5in" height="0.5in"
+     viewBox="0 0 32 32">
+      <title>Administration nationale</title>
+      <path fill="#e8e8e8" style="fill: var(--color3, #e8e8e8)" d="M15.966 6.999h0.382v5.53h-0.382v-5.53z"></path>
+      <path fill="#e8e8e8" style="fill: var(--color3, #e8e8e8)" d="M10.494 15.294v10.678h11.207v-10.678h-11.207zM14.495 16.676h0.912v3.059h-0.912v-3.059zM12.995 24.295h-0.912v-3.059h0.912v3.059zM12.995 19.765h-0.912v-3.089h0.912v3.089zM17.848 19.765h-0.912v-3.089h0.912v3.089zM20.29 24.295h-0.912v-3.059h0.912v3.059zM20.29 19.765h-0.912v-3.089h0.912v3.089z"></path>
+      <path fill="#6d87a4" style="fill: var(--color1, #6d87a4)" d="M16.171 12.029l-6.118 2.765c-0.147 0.059-0.294 0.147-0.294 0.294 0 0.177 0.118 0.294 0.294 0.294h12.148c0.177 0 0.294-0.118 0.294-0.294 0-0.088-0.029-0.177-0.118-0.235l-6.207-2.824z"></path>
+      <path fill="#e8e8e8" style="fill: var(--color3, #e8e8e8)" d="M0.817 26.413h30.297v0.588h-30.297v-0.588z"></path>
+      <path fill="#6d87a4" style="fill: var(--color1, #6d87a4)" d="M15.966 8.764c-0.765-0.265-1.53 0.618-2.265 0.088v-1.706c0.765 0.5 1.53-0.382 2.265-0.088v1.706z"></path>
+      <path fill="#e8e8e8" style="fill: var(--color3, #e8e8e8)" d="M2.288 18.765h7.648v7.354h-7.648v-7.354z"></path>
+      <path fill="#e8e8e8" style="fill: var(--color3, #e8e8e8)" d="M22.29 18.765h7.648v7.354h-7.648v-7.354z"></path>
+      <path fill="#6d87a4" style="fill: var(--color1, #6d87a4)" d="M3.758 19.942h0.882v2.059h-0.882v-2.059z"></path>
+      <path fill="#6d87a4" style="fill: var(--color1, #6d87a4)" d="M5.817 19.942h0.882v2.059h-0.882v-2.059z"></path>
+      <path fill="#6d87a4" style="fill: var(--color1, #6d87a4)" d="M7.877 19.942h0.882v2.059h-0.882v-2.059z"></path>
+      <path fill="#6d87a4" style="fill: var(--color1, #6d87a4)" d="M23.466 19.942h0.882v2.059h-0.882v-2.059z"></path>
+      <path fill="#6d87a4" style="fill: var(--color1, #6d87a4)" d="M25.525 19.942h0.882v2.059h-0.882v-2.059z"></path>
+      <path fill="#6d87a4" style="fill: var(--color1, #6d87a4)" d="M27.585 19.942h0.882v2.059h-0.882v-2.059z"></path>
+      <path fill="#6d87a4" style="fill: var(--color1, #6d87a4)" d="M23.466 22.883h0.882v2.059h-0.882v-2.059z"></path>
+      <path fill="#6d87a4" style="fill: var(--color1, #6d87a4)" d="M25.525 22.883h0.882v2.059h-0.882v-2.059z"></path>
+      <path fill="#6d87a4" style="fill: var(--color1, #6d87a4)" d="M27.585 22.883h0.882v2.059h-0.882v-2.059z"></path>
+      <path fill="#6d87a4" style="fill: var(--color1, #6d87a4)" d="M3.758 22.883h0.882v2.059h-0.882v-2.059z"></path>
+      <path fill="#6d87a4" style="fill: var(--color1, #6d87a4)" d="M5.817 22.883h0.882v2.059h-0.882v-2.059z"></path>
+      <path fill="#6d87a4" style="fill: var(--color1, #6d87a4)" d="M7.877 22.883h0.882v2.059h-0.882v-2.059z"></path>
+      <path fill="#6d87a4" style="fill: var(--color1, #6d87a4)" d="M14.054 21.412h3.824v4.412h-3.824v-4.412z"></path>
+      <path fill="#647c97" style="fill: var(--color9, #647c97)" d="M14.348 21.706h3.236v3.824h-3.236v-3.824z"></path>
+    </svg>
