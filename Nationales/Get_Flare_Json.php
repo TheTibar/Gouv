@@ -8,12 +8,12 @@ echo(nl2br("\n ne pas oublier de supprimer les lignes qui bouclent avec cette re
 /**/
 $process = new Process();
 //On récupère l'id du nouveau process
-$process->getCurrentProcess();
-$current_process = $process->__get("current_process"); //#TODO_PROCESS
+$process->getCurrentProcess('N');
+$current_process = $process->__get("current_process");
 
 echo(nl2br("\n Process actuel : " . $current_process . "\n"));
 
-//Pour générer un JSON hierarchique (attention, la fonction encapsule dans [] alors que les programmes appelant n'ont pas besoin de ce niveau
+//Pour générer un JSON hierarchique
 $Orga = new Orga();
 $result = $Orga->getFlatArray($current_process);
 
@@ -27,7 +27,7 @@ $nodes_json = json_encode($outputTree, JSON_UNESCAPED_UNICODE);
 
 //var_dump($nodes_json);
 
-$Orga->writeToServer("/d3graph/flare_" . $current_process . ".json", $nodes_json);
+$Orga->writeToServer("d3graph/data/flare_" . $current_process . ".json", $nodes_json);
 
 
 function transformTree($treeArray, $parentId = null)

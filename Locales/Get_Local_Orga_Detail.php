@@ -8,8 +8,8 @@ include_once('fonctions.php');
 $process = new Process(); 
 
 //On récupère l'id du nouveau process
-$process->getCurrentProcess();
-$currentProcess = $process->__get("current_process");  //#TODO_PROCESS
+$process->getCurrentProcess('L');
+$currentProcess = $process->__get("current_process");
 echo(nl2br("Process actuel : " . $currentProcess . "\n"));
 
 

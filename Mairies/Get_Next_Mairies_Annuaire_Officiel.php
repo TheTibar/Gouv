@@ -11,8 +11,8 @@ include_once('fonctions.php');
 $process = new Process();
 
 //On récupère l'id du nouveau process
-$process->getCurrentProcess();
-$current_process = $process->__get("current_process"); //#TODO_PROCESS
+$process->getCurrentProcess('M');
+$current_process = $process->__get("current_process");
 echo(nl2br("Process actuel : " . $current_process . "\n"));
 
 $Mairie = new Mairie();

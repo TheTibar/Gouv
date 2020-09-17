@@ -22,11 +22,11 @@ else // Il manque des paramètres, on avertit le visiteur
 
 //On crée un process
 $process = new Process();
-$process->createProcess();  //#TODO_PROCESS
+$process->createProcess('L');
 
 //On récupère l'id du nouveau process
-$process->getCurrentProcess();
-$currentProcess = $process->__get("current_process");  //#TODO_PROCESS
+$process->getCurrentProcess('L');
+$currentProcess = $process->__get("current_process");
 echo(nl2br("Process actuel : " . $currentProcess . "\n"));
 
 

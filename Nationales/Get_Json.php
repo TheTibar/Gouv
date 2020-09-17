@@ -10,8 +10,8 @@ and remote_id <> 172210;");
 /**/
 $process = new Process();
 //On récupère l'id du process en cours
-$process->getCurrentProcess(); //#TODO_PROCESS
-$current_process = $process->__get("current_process");  //#TODO_PROCESS
+$process->getCurrentProcess('N');
+$current_process = $process->__get("current_process");
 echo("Process actuel : " . $current_process);
 
 $Orga = new Orga();

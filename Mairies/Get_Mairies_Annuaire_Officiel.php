@@ -11,11 +11,11 @@ include_once('fonctions.php');
 /* à réactiver pour le passage en prod */
 //On crée un process
 $process = new Process();
-$process->createProcess(); //#TODO_PROCESS
+$process->createProcess('M');
 
 //On récupère l'id du nouveau process
-$process->getCurrentProcess();
-$current_process = $process->__get("current_process");  //#TODO_PROCESS
+$process->getCurrentProcess('M');
+$current_process = $process->__get("current_process");
 echo(nl2br("Process actuel : " . $current_process . "\n"));
 
 $Mairie = new Mairie();

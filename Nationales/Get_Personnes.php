@@ -9,8 +9,8 @@ echo(nl2br("require once OK \n"));
 $process = new Process();
 
 //On récupère l'id du process en cours
-$process->getCurrentProcess();
-$current_process = $process->__get("current_process"); //#TODO_PROCESS
+$process->getCurrentProcess('N');
+$current_process = $process->__get("current_process");
 echo(nl2br("Process actuel : " . $current_process . "\n"));
 
 

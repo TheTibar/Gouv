@@ -26,12 +26,12 @@ class Process {
         }
     } 
 	
-	public function createProcess() //#TODO_PROCESS
+    public function createProcess($domain)
 	{
 		$instance = \ConnectDB::getInstance();
         $conn = $instance->getConnection();
 		
-		$sql = "INSERT INTO gouv_process(process_id) VALUES (NULL)";
+		$sql = "INSERT INTO gouv_process(process_id, type_process) VALUES (NULL, '$domain')";
 		
 		try {
             if (mysqli_query($conn, $sql))
@@ -46,11 +46,11 @@ class Process {
         }
 	}
 	
-	public function getCurrentProcess()
+	public function getCurrentProcess($domain)
 	{
 		$instance = \ConnectDB::getInstance();
         $conn = $instance->getConnection();
-		$sql = "SELECT max(process_id) as current_process FROM gouv_process";
+		$sql = "SELECT max(process_id) as current_process FROM gouv_process where type_process = '$domain'";
 		
 		try
 		{
