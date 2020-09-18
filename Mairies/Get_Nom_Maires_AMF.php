@@ -82,7 +82,7 @@ for($j = 0; $j < $nbCom; $j++) {
 			echo(nl2br("KO \n"));
 		}
 
-		echo(nl2br("Nom : " . $maire . " (Ville : " . $currentInseeCode . ", Nb hab : " . $hab . ") \n"));
+		//echo(nl2br("Nom : " . $maire . " (Ville : " . $currentInseeCode . ", Nb hab : " . $hab . ") \n"));
 		
 	} else {
 		echo(nl2br("Etape " . $j . " sur " . $nbCom . ", ville AMF : " . $currentInseeCode . ", état : HORS SCOPE \n"));

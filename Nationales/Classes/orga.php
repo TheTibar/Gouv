@@ -97,7 +97,7 @@ class Orga {
 				) drv on drv.orga_remote_id = GOR.remote_id and drv.process_id = GOR.process_id 
 				WHERE GOR.process_id = $current_process";
 		
-		echo($sql);		
+		//echo($sql);		
 
 		/*Format nodes
 		  "nodes": [
@@ -183,7 +183,7 @@ class Orga {
 		$sql = "SELECT remote_id as id, label as name, link as link, father_id as parent, '' as relation, '' as color, '' as size from gouv_orga 
 				where process_id = $current_process";
 				
-		echo($sql);
+		//echo($sql);
 		/**/
 		if ($sql_result = mysqli_query($conn, $sql))
 		{
@@ -285,6 +285,66 @@ class Orga {
             echo ("Erreur : " . $e);
         }
 	}
+	
+	public function createFirstLevel($current_process) {
+	    $instance = \ConnectDB::getInstance();
+	    $conn = $instance->getConnection();
+	    
+	    $current_process = mysqli_real_escape_string($conn, $current_process);
+	    
+	    $sql = "UPDATE gouv_orga AS go1 
+                INNER JOIN (
+                	SELECT go2.remote_id as n_father 
+                    FROM gouv_orga go2 
+                    WHERE go2.label = 'Premier ministre'
+                    ) AS drv1
+                SET go1.father_id = drv1.n_father
+                WHERE 1 = 1
+                	AND go1.label <> 'Premier ministre'
+                    AND go1.father_id = 0
+                	AND go1.process_id = $current_process";
+	    
+	    
+	    try {
+	        if (mysqli_query($conn, $sql))
+	        {
+	            echo(nl2br("SAVE OK \n"));
+	        }
+	        else
+	        {
+	            echo(nl2br("SAVE KO: " . $sql . "\n" . mysqli_error($conn) . "\n"));
+	        }
+	    } catch (Exception $e) {
+	        echo ("Erreur : " . $e);
+	    }
+	    
+	}
+	
+	public function removeInfiniteLoops($current_process) {
+	    $instance = \ConnectDB::getInstance();
+	    $conn = $instance->getConnection();
+	    
+	    $current_process = mysqli_real_escape_string($conn, $current_process);
+	    
+	    $sql = "DELETE 
+                FROM gouv_orga
+                WHERE remote_id = father_id
+                    AND process_id = $current_process";
+	    
+	    try {
+	        if (mysqli_query($conn, $sql))
+	        {
+	            echo(nl2br("DELETE OK \n"));
+	        }
+	        else
+	        {
+	            echo(nl2br("DELETE KO: " . $sql . "\n" . mysqli_error($conn) . "\n"));
+	        }
+	    } catch (Exception $e) {
+	        echo ("Erreur : " . $e);
+	    }
+	}
+	
 }
 
 ?>

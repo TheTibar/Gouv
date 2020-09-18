@@ -14,7 +14,7 @@ $current_M_process = $process->__get("current_process");
 echo(nl2br("Process locales actuel : " . $current_L_process . "\n"));
 echo(nl2br("Process mairies actuel : " . $current_M_process . "\n"));
 
-echo(nl2br("Création du niveau -1 et mise à jour du father_id du niveau 0 avec ce niveau -1"));
+echo(nl2br("Création du niveau -1 et mise à jour du father_id du niveau 0 avec ce niveau -1 \n"));
 
 $Local_Orga = new Local_Orga();
 //createCentralPoint($current_L_process)
@@ -22,7 +22,7 @@ echo(nl2br("Création du point central \n"));
 $Local_Orga->createCentralPoint($current_L_process);
 
 //updateFirstLevel($current_L_process)
-echo(nl2br("Mise à jour du niveau 0 \n"));
+echo(nl2br("Mise à jour du niveau 0 en liant au niveau -1 précedemment créé \n"));
 $Local_Orga->updateFirstLevel($current_L_process);
 /**/
 echo(nl2br("Récupération des données dans un json \n"));

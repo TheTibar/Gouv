@@ -10,7 +10,7 @@ $process->getCurrentProcess('L');
 $current_L_process = $process->__get("current_process");
 
 $process->getCurrentProcess('M');
-$current_L_process = $process->__get("current_process");
+$current_M_process = $process->__get("current_process");
 
 echo(nl2br("Process local : " . $current_L_process . "\n"));
 echo(nl2br("Process mairies : " . $current_M_process . "\n"));

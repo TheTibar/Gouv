@@ -29,12 +29,12 @@ echo(nl2br("Reset Personnes Ok \n"));
 //var_dump($linkList);
 echo(nl2br("Count linkList : " . count($linkList) . "\n"));
 
-
-for($cpt=0; $cpt < count($linkList); $cpt++)
+$nbUrl = count($linkList);
+for($cpt=0; $cpt < $nbUrl; $cpt++)
 //for($cpt=0; $cpt < 10; $cpt++) //pour les tests
 {
 	$url = $linkList[$cpt]["link"];
-	echo(nl2br("i : " . $cpt . ", url : " . $url . "\n"));
+	echo(nl2br("Etape " . $cpt . " sur " . $nbUrl . ", url : " . $url . "\n"));
 
 	$persons = getPersonData($url);
 
@@ -90,7 +90,7 @@ function getPersonData($url)
 	//ul[@class="sat-responsable"]//p[@itemprop="jobTitle"] //renvoie la fonction
 	//ul[@class="sat-responsable"]//p[@itemprop="name"] //renvoie le nom
 
-	echo(nl2br("url : " . $url . "\n"));
+	//echo(nl2br("url : " . $url . "\n"));
 	$content = curl_get_contents($url);
 	//echo("taille content : " . strlen($content));
 	$dom = new DOMDocument;
@@ -100,7 +100,7 @@ function getPersonData($url)
 	$xPath = new DOMXPath($dom);
 	
 	$anchorTags = $xPath->evaluate('//ul[@class="sat-responsable"]//p[@itemprop="jobTitle"]'); //Ok
-	var_dump($anchorTags);
+	//var_dump($anchorTags);
 
 	foreach ($anchorTags as $anchorTag) {
 		$jobTitles[] = array("remoteId"=>$remoteId, "jobTitle"=>$anchorTag->nodeValue, "name"=>"");

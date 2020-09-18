@@ -105,12 +105,17 @@ class Local_Orga {
 	}
 	
 	public function createCentralPoint($current_L_process) {
+	    $instance = \ConnectDB::getInstance();
+	    $conn = $instance->getConnection();
 	    
 	    $current_L_process  = mysqli_real_escape_string($conn, $current_L_process);
 	    $sql = "INSERT INTO gouv_local_orga
-                (theme, id, remote_id, link, label, father_id, process_id)
+                (theme, id, remote_id, level, link, label, father_id, process_id)
                 VALUES
                 ('Point central', 99999, 99999, -1, 'Racine', 'Point central', 0, $current_L_process)";
+	    
+	    echo(nl2br($sql . "\n"));
+	    
 	    try
 	    {
 	        if (mysqli_query($conn, $sql))
@@ -133,12 +138,17 @@ class Local_Orga {
 	
 	public function updateFirstLevel($current_L_process) {
 	    
+	    $instance = \ConnectDB::getInstance();
+	    $conn = $instance->getConnection();
+	    
 	    $current_L_process  = mysqli_real_escape_string($conn, $current_L_process);
-	    $sql = "UPDATE gouv_local_orga \n
-                SET father_id = 99999 \n
+	    $sql = "UPDATE gouv_local_orga
+                SET father_id = 99999
                 WHERE father_id = 0 
                     AND level = 0 
                     AND process_id = $current_L_process";
+	    
+	    echo(nl2br($sql . "\n"));
 	    
 	    try
 	    {
@@ -289,8 +299,8 @@ class Local_Orga {
 		$result['links'] = $links;
 		$nodes_json = json_encode($result, JSON_UNESCAPED_UNICODE);
 		
-		if (file_put_contents("graph/data/local_data_node_links_L_" . $current_L_process . "_M_" . $current_M_process . ".json", $result))
-			echo(nl2br("\n JSON file created successfully... \n"));
+		if (file_put_contents("graph/data/local_data_node_links_L_" . $current_L_process . "_M_" . $current_M_process . ".json", $nodes_json))
+		    echo(nl2br("\n JSON file created successfully :  \n" . "graph/data/local_data_node_links_L_" . $current_L_process . "_M_" . $current_M_process . ".json"));
 		else 
 			echo(nl2br("\n Error creating json file... \n"));
 		
@@ -346,7 +356,7 @@ class Local_Orga {
 		$result = json_encode($result, JSON_UNESCAPED_UNICODE);
 
 		if (file_put_contents("graph/data/local_data_map_L_" . $current_L_process . "_M_" . $current_M_process . ".json", $result))
-			echo(nl2br("\n JSON file created successfully... \n"));
+		    echo(nl2br("\n JSON file created successfully : \n" . "graph/data/local_data_map_L_" . $current_L_process . "_M_" . $current_M_process . ".json"));
 		else 
 			echo(nl2br("\n Error creating json file... \n"));
 

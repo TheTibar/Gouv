@@ -3,8 +3,6 @@
 require_once __DIR__ . '/Classes/orga.php';
 require_once __DIR__ . '/Classes/process.php';
 
-echo(nl2br("\n ne pas oublier de mettre à jour le niveau 0 avec cette requête : \n update gouv_orga \n set father_id = 172210 \n where father_id = 0 \n and remote_id <> 172210;"));
-echo(nl2br("\n ne pas oublier de supprimer les lignes qui bouclent avec cette requête : \n delete from gouv_orga where remote_id = father_id \n"));
 /**/
 $process = new Process();
 //On récupère l'id du nouveau process
