@@ -25,7 +25,10 @@ $nodes_json = json_encode($outputTree, JSON_UNESCAPED_UNICODE);
 
 //var_dump($nodes_json);
 
-$Orga->writeToServer("d3graph/data/flare_" . $current_process . ".json", $nodes_json);
+$path = "/../d3graph/data/";
+$filename = "flare_" . $current_process . ".json";
+
+$Orga->writeToServer($path, $filename, $nodes_json);
 
 
 function transformTree($treeArray, $parentId = null)

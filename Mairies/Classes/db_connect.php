@@ -8,13 +8,13 @@ class ConnectDB
     private $mysql_db_conn;
 
     //A rendre indépendant du code
-	/* LOCAL */
+	/* LOCAL 
     private $mysql_db_host = 'localhost';
     private $mysql_db_user = 'root';
     private $mysql_db_pass = '';
     private $mysql_db_name = 'gouv';
     private $mysql_db_port = '3306';
-	
+	*/
 	
 	/* TRAVAIL 
     private $mysql_db_host = 'localhost';
@@ -32,13 +32,13 @@ class ConnectDB
     private $mysql_db_port = '3306';
 	*/
 	
-	/* OVH 
+	/* OVH */
     private $mysql_db_host = 'reivaxweiradmind.mysql.db';
     private $mysql_db_user = 'reivaxweiradmind';
     private $mysql_db_pass = 'Redalert1';
     private $mysql_db_name = 'reivaxweiradmind';
     private $mysql_db_port = '3306';
-	*/
+	
 
     // The db connection is established in the private constructor.
     private function __construct()

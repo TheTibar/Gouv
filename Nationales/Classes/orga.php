@@ -93,6 +93,7 @@ class Orga {
 						process_id, 
 						GROUP_CONCAT(CONCAT(role, ' : ', name) SEPARATOR ';') as person 
 					FROM gouv_person GP 
+                    WHERE GP.process_id = $current_process
 					GROUP BY orga_remote_id 
 				) drv on drv.orga_remote_id = GOR.remote_id and drv.process_id = GOR.process_id 
 				WHERE GOR.process_id = $current_process";
@@ -157,7 +158,19 @@ class Orga {
 		
 		//var_dump($nodes_json);
 		
-		if (file_put_contents("graph/data/data_node_links_person" . $current_process . ".json", $nodes_json))
+		$path = __DIR__ . "/../graph/data/";
+		$filename = "data_node_links_person_" . $current_process . ".json";
+		
+		echo(nl2br("\n path : " . $path . "\n"));
+		
+		$rpath = realpath($path);
+		echo(nl2br("rpath : " . $rpath . "\n"));
+		
+		$file = $rpath . "/" . $filename;
+		
+		echo(nl2br(is_writable($file) ? "\n" .  $file . " is writable<br>" : "\n" . $file . " is not writable<br>"));
+		
+		if (file_put_contents($file, $nodes_json))
 			echo(nl2br("\n JSON file created successfully... \n"));
 		else 
 			echo(nl2br("\n Oops! Error creating json file... \n"));
@@ -199,8 +212,21 @@ class Orga {
 		
 	}
 	
-	public function writeToServer($path, $json) {
-		if (file_put_contents($path, $json))
+	public function writeToServer($path, $filename, $json) {
+	    
+	    $path = __DIR__ . $path;
+	    
+	    echo(nl2br("\n path : " . $path . "\n"));
+	    
+	    $rpath = realpath($path);
+	    echo(nl2br("rpath : " . $rpath . "\n"));
+	    
+	    $file = $rpath . "/" . $filename;
+	    
+	    echo(nl2br(is_writable($file) ? "\n" .  $file . " is writable<br>" : "\n" . $file . " is not writable<br>"));
+	    
+	    
+	    if (file_put_contents($file, $json))
 			echo(nl2br("\n JSON file created successfully... \n"));
 		else 
 			echo(nl2br("\n Oops! Error creating json file... \n"));
